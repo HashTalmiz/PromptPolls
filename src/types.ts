@@ -5,3 +5,15 @@ type PollType = {
     createdAt?: Date,
     isLive?: Boolean
 }
+
+type pollersScema = {
+    pollId: string,
+    IPAdress: string,
+    pollOption: number
+}
+
+type optionsCountSchema = {
+    pollId: string,
+    pollOption: string,
+    count: number 
+}

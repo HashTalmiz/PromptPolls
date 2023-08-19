@@ -3,16 +3,6 @@ import { Schema as RedisSchema, Repository as RedisRepository, Entity, Repositor
 import { createClient } from 'redis'
 import { EntityId } from 'redis-om'
 
-type PollInput = {
-    pollTitle: String;
-    pollOptions: String[];
-}
-
-interface PollInfo {
-    pollId: String;
-    pollTitle: String;
-    pollOptions: String[];
-}
 
 /* pulls the Redis URL from .env */
 const url = process.env.REDIS_URL
@@ -38,8 +28,12 @@ export const connectRedis = async () => {
         dataStructure: 'HASH'
     })
 
-    const pollersRepository = new RedisRepository(pollersSchema, redis) 
-    const optionsCountRepository = new RedisRepository(optionsCountSchema, redis) 
+    const pollersRepository = new RedisRepository(pollersSchema, redis);
+    const optionsCountRepository = new RedisRepository(optionsCountSchema, redis);
+
+    await pollersRepository.createIndex();
+    await optionsCountRepository.createIndex();
+
 
     return { pollersRepository, optionsCountRepository}
 };
