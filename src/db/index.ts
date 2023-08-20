@@ -1,17 +1,16 @@
-import { Entity, EntityData } from "redis-om";
+import { Entity } from "redis-om";
 import { prisma } from "./prisma"
-import redis from "./redis";
 
 import redisDB from "./redis"
 
 
-const createPoll = async (pollData: PollType): Promise<String> => {
+const createPoll = async (pollData: PollType): Promise<Entity> => {
     const newPoll = await prisma.poll.create({
         data: {
             ...pollData
         }
     });
-    return newPoll.id;
+    return newPoll;
 }
 
 const addVote = async (pollId: string, IPAddress: string, pollOption: number) => {
@@ -44,7 +43,13 @@ const getPollInfo = async(pollId: string) => {
 }
 
 const getPollStats = async(pollId: string) => {
-    
+    const options = await redisDB.optionsCountRepository.search().where('pollId').eq(pollId).return.all();
+    const result = {};
+    options.forEach((AbstractOption) => {
+        const option = AbstractOption as optionsCountSchema;
+        result[option.pollOption] = option.count;
+    });
+    return result;
 }
 
 

@@ -1,9 +1,9 @@
 type PollType = {
-    id?: String,
-    title: String,
-    options: String[],
+    id?: string,
+    title: string,
+    options: string[],
     createdAt?: Date,
-    isLive?: Boolean
+    isLive?: boolean
 }
 
 type pollersScema = {
