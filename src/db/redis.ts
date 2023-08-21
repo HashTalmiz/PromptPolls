@@ -1,5 +1,5 @@
 
-import { Schema as RedisSchema, Repository as RedisRepository, Entity, Repository } from 'redis-om';
+import { Schema as RedisSchema, Repository as RedisRepository } from 'redis-om';
 import { createClient } from 'redis'
 import { EntityId } from 'redis-om'
 
@@ -7,7 +7,7 @@ import { EntityId } from 'redis-om'
 /* pulls the Redis URL from .env */
 const url = process.env.REDIS_URL
 
-export const connectRedis = async () => {
+async function init() {
     const redis = createClient()
     redis.on('error', (err) => console.log('Redis Client Error', err));
     await redis.connect();
@@ -34,8 +34,11 @@ export const connectRedis = async () => {
     await pollersRepository.createIndex();
     await optionsCountRepository.createIndex();
 
+    return { pollersRepository, optionsCountRepository};
 
-    return { pollersRepository, optionsCountRepository}
-};
-
-export default await connectRedis();
+}
+let redisDB;
+(async () => {
+    redisDB = await init();
+})();
+export default redisDB;

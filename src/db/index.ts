@@ -34,7 +34,7 @@ const addVote = async (pollId: string, IPAddress: string, pollOption: number) =>
 }
 
 const getPollInfo = async(pollId: string) => {
-    const result: PollType = await prisma.poll.findUnique({
+    const result: PollType | null = await prisma.poll.findUnique({
         where: {
           id: pollId,
         }

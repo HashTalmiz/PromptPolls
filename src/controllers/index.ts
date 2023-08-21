@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import DB from "../db/index"
-import { zPollersSchema, zPollTypeSchema } from "../utils/zodSchemas";
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
+
 
 
 export const createPoll = async (req: Request, res: Response) => {
