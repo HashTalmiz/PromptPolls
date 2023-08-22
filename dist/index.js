@@ -6,12 +6,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const routes_1 = __importDefault(require("./routes/routes"));
+const errorHandling_1 = require("./utils/errorHandling");
 // Create Express app
 const app = (0, express_1.default)();
 // Middleware
 app.use(body_parser_1.default.json());
 app.use(express_1.default.json());
 app.use('/api', routes_1.default);
+app.use(errorHandling_1.errorResponse);
 // Define a sample route
 // app.get('/', (req: Request, res: Response) => {
 //     res.send("kik");

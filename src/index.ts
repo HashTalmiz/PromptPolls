@@ -1,6 +1,7 @@
 import express, {Request, Response, Express} from 'express';
 import bodyParser from 'body-parser';
 import apiRouter from "./routes/routes";
+import { errorResponse } from './utils/errorHandling';
 
 // Create Express app
 const app = express();
@@ -9,6 +10,9 @@ const app = express();
 app.use(bodyParser.json());
 app.use(express.json());
 app.use('/api', apiRouter);
+
+
+app.use(errorResponse);
 
 // Define a sample route
 // app.get('/', (req: Request, res: Response) => {

@@ -1,6 +1,6 @@
 import express from 'express';
-import * as controller from "../controllers/index"
-
+import * as controller from "../controllers/index";
+import { asyncHandler } from "../utils/errorHandling";
 const router = express.Router();
 
 router.post('/createPoll', controller.createPoll);

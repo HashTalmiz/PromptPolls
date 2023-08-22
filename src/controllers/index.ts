@@ -1,21 +1,22 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import DB from "../db/index"
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
+import * as z from "../utils/zodSchemas";
+import { asyncHandler } from "../utils/errorHandling";
 
-
-
-export const createPoll = async (req: Request, res: Response) => {
-    //const result = zPollTypeSchema.safeParse(req.body);
-    // if(!result.success) {
-    //     res.status(StatusCodes.BAD_REQUEST).json({
-    //         error: ReasonPhrases.BAD_REQUEST,
-    //         msg: "Expected title and poll options"
-    //     })
-    // }
-    const poll: PollType = req.body;
+export const createPoll = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    const result = z.zodSafeParse(z.zPollTypeSchema, req.body)
+    if(result.error) {
+        res.status(StatusCodes.BAD_REQUEST).json({
+            reason: ReasonPhrases.BAD_REQUEST,
+            error: result.error.issues,
+        })
+        return;
+    }
+    const poll = result.data as PollType;
     const newPoll = await DB.createPoll(poll);
     res.status(200).json(newPoll);
-}
+});
 
 export const getPoll = async (req: Request, res: Response) => {
     const id = req.body.pollId;

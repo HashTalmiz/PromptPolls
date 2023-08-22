@@ -9,13 +9,6 @@ async function init() {
     redis.on('error', (err) => console.log('Redis Client Error', err));
     await redis.connect();
 }
-// (async () => {
-//     try {
-//         await init();
-//     } catch (e) {
-//         console.log("Error connecting to redis");
-//     }
-// })();
 const pollersSchema = new redis_om_1.Schema("Pollers", {
     pollId: { type: "string" },
     IPAdress: { type: "string" },
@@ -39,7 +32,7 @@ const optionsCountRepository = new redis_om_1.Repository(optionsCountSchema, red
         await optionsCountRepository.createIndex();
     }
     catch (e) {
-        console.log("Error creating indexes in redis");
+        console.log("Error connecting to or creating indexes in redis");
     }
 })();
 exports.default = { pollersRepository, optionsCountRepository };
