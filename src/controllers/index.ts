@@ -3,8 +3,10 @@ import DB from "../db/index"
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import * as z from "../utils/zodSchemas";
 import { asyncHandler } from "../utils/errorHandling";
+import requestIp from "request-ip";
 
 export const createPoll = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    const clientIp = requestIp.getClientIp(req); 
     const result = z.zodSafeParse(z.zPollTypeSchema, req.body)
     if(result.error) {
         res.status(StatusCodes.BAD_REQUEST).json({

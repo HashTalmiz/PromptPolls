@@ -12,6 +12,7 @@ const app = (0, express_1.default)();
 // Middleware
 app.use(body_parser_1.default.json());
 app.use(express_1.default.json());
+// app.use(requestIp.mw())
 app.use('/api', routes_1.default);
 app.use(errorHandling_1.errorResponse);
 // Define a sample route

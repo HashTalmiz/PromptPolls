@@ -2,13 +2,13 @@ import express, {Request, Response, Express} from 'express';
 import bodyParser from 'body-parser';
 import apiRouter from "./routes/routes";
 import { errorResponse } from './utils/errorHandling';
-
 // Create Express app
 const app = express();
 
 // Middleware
 app.use(bodyParser.json());
 app.use(express.json());
+// app.use(requestIp.mw())
 app.use('/api', apiRouter);
 
 

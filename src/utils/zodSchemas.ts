@@ -25,6 +25,7 @@ export const zPollTypeSchema = z.object({
   options: z.array(z.string()),
   createdAt: z.date().optional(),
   isLive: z.boolean().optional(),
+  createdBy: z.string().optional(),
 });
 
 export const zPollersSchema = z.object({

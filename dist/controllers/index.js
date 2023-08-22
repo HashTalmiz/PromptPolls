@@ -31,7 +31,9 @@ const index_1 = __importDefault(require("../db/index"));
 const http_status_codes_1 = require("http-status-codes");
 const z = __importStar(require("../utils/zodSchemas"));
 const errorHandling_1 = require("../utils/errorHandling");
+const request_ip_1 = __importDefault(require("request-ip"));
 exports.createPoll = (0, errorHandling_1.asyncHandler)(async (req, res, next) => {
+    const clientIp = request_ip_1.default.getClientIp(req);
     const result = z.zodSafeParse(z.zPollTypeSchema, req.body);
     if (result.error) {
         res.status(http_status_codes_1.StatusCodes.BAD_REQUEST).json({

@@ -3,7 +3,8 @@ type PollType = {
     title: string,
     options: string[],
     createdAt?: Date,
-    isLive?: boolean
+    isLive?: boolean,
+    createdBy?: string
 }
 
 type pollersScema = {
