@@ -19,18 +19,20 @@ const addVote = async (pollId: string, IPAddress: string, pollOption: number) =>
         IPAddress,
         pollOption
     });
-    const vote = await redisDB.optionsCountRepository.search().where('pollId').eq(pollId).and('IPAddress').eq(IPAddress).return.all();
+    const vote = await redisDB.optionsCountRepository.search().where('pollId').eq(pollId).and('pollOption').eq(pollOption).return.all();
+    let result;
     if(vote.length !== 0) {
         const v = vote[0] as optionsCountSchema;
         v.count += 1;
-        await redisDB.optionsCountRepository.save(v);
+        result = await redisDB.optionsCountRepository.save(v);
     } else {
-        await redisDB.optionsCountRepository.save({
+        result = await redisDB.optionsCountRepository.save({
             pollId,
             pollOption,
             count: 1
         });
     }
+    return result;
 }
 
 const getPollInfo = async(pollId: string) => {

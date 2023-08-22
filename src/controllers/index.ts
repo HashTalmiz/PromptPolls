@@ -41,5 +41,6 @@ export const addVote = async (req: Request, res: Response) => {
     // }
 
     const result = req.body
-    await DB.addVote(result.pollId, result.IPAddress, result.pollOption);
+    const json = await DB.addVote(result.pollId, result.IPAddress, result.pollOption);
+    res.status(StatusCodes.OK).json(json);
 }

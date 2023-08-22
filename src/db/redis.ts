@@ -6,39 +6,40 @@ import { EntityId } from 'redis-om'
 
 /* pulls the Redis URL from .env */
 const url = process.env.REDIS_URL
-
+const redis = createClient()
 async function init() {
-    const redis = createClient()
     redis.on('error', (err) => console.log('Redis Client Error', err));
     await redis.connect();
-
-    const pollersSchema = new RedisSchema("Pollers", {
-        pollId: { type: "string" },
-        IPAdress: { type: "string" },
-        pollOption : { type: "number" }
-    }, {
-        dataStructure: 'HASH'
-    })
-
-    const optionsCountSchema = new RedisSchema("OptionsCount", {
-        pollId: { type: "string" },
-        pollOption: { type: "number" },
-        count : { type: "number" }
-    }, {
-        dataStructure: 'HASH'
-    })
-
-    const pollersRepository = new RedisRepository(pollersSchema, redis);
-    const optionsCountRepository = new RedisRepository(optionsCountSchema, redis);
-
-    await pollersRepository.createIndex();
-    await optionsCountRepository.createIndex();
-
-    return { pollersRepository, optionsCountRepository};
-
 }
-let redisDB;
+
+const pollersSchema = new RedisSchema("Pollers", {
+    pollId: { type: "string" },
+    IPAdress: { type: "string" },
+    pollOption : { type: "number" }
+}, {
+    dataStructure: 'HASH'
+})
+
+const optionsCountSchema = new RedisSchema("OptionsCount", {
+    pollId: { type: "string" },
+    pollOption: { type: "number" },
+    count : { type: "number" }
+}, {
+    dataStructure: 'HASH'
+})
+
+const pollersRepository = new RedisRepository(pollersSchema, redis);
+const optionsCountRepository = new RedisRepository(optionsCountSchema, redis);
+
 (async () => {
-    redisDB = await init();
+    try {
+        await init();
+        await pollersRepository.createIndex();
+        await optionsCountRepository.createIndex();
+    } catch (e) {
+        console.log("Error connecting to or creating indexes in redis");
+    }
 })();
-export default redisDB;
+
+
+export default { pollersRepository, optionsCountRepository };

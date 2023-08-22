@@ -17,19 +17,21 @@ const addVote = async (pollId, IPAddress, pollOption) => {
         IPAddress,
         pollOption
     });
-    const vote = await redis_1.default.optionsCountRepository.search().where('pollId').eq(pollId).and('IPAddress').eq(IPAddress).return.all();
+    const vote = await redis_1.default.optionsCountRepository.search().where('pollId').eq(pollId).and('pollOption').eq(pollOption).return.all();
+    let result;
     if (vote.length !== 0) {
         const v = vote[0];
         v.count += 1;
-        await redis_1.default.optionsCountRepository.save(v);
+        result = await redis_1.default.optionsCountRepository.save(v);
     }
     else {
-        await redis_1.default.optionsCountRepository.save({
+        result = await redis_1.default.optionsCountRepository.save({
             pollId,
             pollOption,
             count: 1
         });
     }
+    return result;
 };
 const getPollInfo = async (pollId) => {
     const result = await prisma_1.prisma.poll.findUnique({

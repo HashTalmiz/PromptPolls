@@ -42,7 +42,8 @@ const addVote = async (req, res) => {
     //     })
     // }
     const result = req.body;
-    await index_1.default.addVote(result.pollId, result.IPAddress, result.pollOption);
+    const json = await index_1.default.addVote(result.pollId, result.IPAddress, result.pollOption);
+    res.status(http_status_codes_1.StatusCodes.OK).json(json);
 };
 exports.addVote = addVote;
 //# sourceMappingURL=index.js.map

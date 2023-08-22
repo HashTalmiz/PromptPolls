@@ -7,7 +7,7 @@ router.post('/createPoll', controller.createPoll);
 
 router.get('/getPoll', controller.getPoll);
 
-router.post('/addVote/:id', controller.addVote);
+router.post('/addVote', controller.addVote);
 
 router.get('/test', (req, res) => {
     res.status(200).json({
