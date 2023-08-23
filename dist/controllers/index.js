@@ -46,7 +46,7 @@ exports.createPoll = (0, errorHandling_1.asyncHandler)(async (req, res, next) =>
     const newPoll = await index_1.default.createPoll(poll);
     res.status(200).json(newPoll);
 });
-const getPoll = async (req, res) => {
+exports.getPoll = (0, errorHandling_1.asyncHandler)(async (req, res, next) => {
     const id = req.body.pollId;
     if (!id) {
         res.status(http_status_codes_1.StatusCodes.BAD_REQUEST).json({
@@ -58,9 +58,8 @@ const getPoll = async (req, res) => {
     const stats = await index_1.default.getPollStats(id);
     const result = Object.assign(Object.assign({}, data), stats);
     res.status(http_status_codes_1.StatusCodes.OK).json(result);
-};
-exports.getPoll = getPoll;
-const addVote = async (req, res) => {
+});
+exports.addVote = (0, errorHandling_1.asyncHandler)(async (req, res) => {
     //const result = zPollersSchema.safeParse(req.body);
     // if(!result.success) {
     //     res.status(StatusCodes.BAD_REQUEST).json({
@@ -71,6 +70,5 @@ const addVote = async (req, res) => {
     const result = req.body;
     const json = await index_1.default.addVote(result.pollId, result.IPAddress, result.pollOption);
     res.status(http_status_codes_1.StatusCodes.OK).json(json);
-};
-exports.addVote = addVote;
+});
 //# sourceMappingURL=index.js.map

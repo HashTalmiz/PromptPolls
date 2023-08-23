@@ -20,7 +20,7 @@ export const createPoll = asyncHandler(async (req: Request, res: Response, next:
     res.status(200).json(newPoll);
 });
 
-export const getPoll = async (req: Request, res: Response) => {
+export const getPoll = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const id = req.body.pollId;
     if(!id) {
         res.status(StatusCodes.BAD_REQUEST).json({
@@ -32,9 +32,9 @@ export const getPoll = async (req: Request, res: Response) => {
     const stats = await DB.getPollStats(id);
     const result = {...data, ...stats};
     res.status(StatusCodes.OK).json(result);
-}
+});
 
-export const addVote = async (req: Request, res: Response) => {
+export const addVote = asyncHandler(async (req: Request, res: Response) => {
     //const result = zPollersSchema.safeParse(req.body);
     // if(!result.success) {
     //     res.status(StatusCodes.BAD_REQUEST).json({
@@ -46,4 +46,4 @@ export const addVote = async (req: Request, res: Response) => {
     const result = req.body
     const json = await DB.addVote(result.pollId, result.IPAddress, result.pollOption);
     res.status(StatusCodes.OK).json(json);
-}
+});
