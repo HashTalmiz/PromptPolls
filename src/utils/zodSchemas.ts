@@ -30,7 +30,7 @@ export const zPollTypeSchema = z.object({
 
 export const zPollersSchema = z.object({
   pollId: z.string(),
-  IPAdress: z.string(),
+  IPAddress: z.string(),
   pollOption: z.number(),
 });
 

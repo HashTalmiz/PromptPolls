@@ -7,9 +7,9 @@ type PollType = {
     createdBy?: string
 }
 
-type pollersScema = {
+type pollersSchema = {
     pollId: string,
-    IPAdress: string,
+    IPAddress: string,
     pollOption: number
 }
 
@@ -17,4 +17,13 @@ type optionsCountSchema = {
     pollId: string,
     pollOption: string,
     count: number 
+}
+
+type PollStats = {
+    id?: string,
+    title: string,
+    options: Record<string, number>,
+    createdAt?: Date,
+    isLive?: boolean,
+    createdBy?: string
 }

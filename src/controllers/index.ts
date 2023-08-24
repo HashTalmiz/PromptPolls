@@ -27,23 +27,47 @@ export const getPoll = asyncHandler(async (req: Request, res: Response, next: Ne
             error: ReasonPhrases.BAD_REQUEST,
             msg: "Expected Poll ID"
         })
+        return;
     }
     const data = await DB.getPollInfo(id);
+    if(!data) {
+        return;
+    }
     const stats = await DB.getPollStats(id);
-    const result = {...data, ...stats};
-    res.status(StatusCodes.OK).json(result);
+    const op = data?.options;
+    const newOptions: Array<Record<string, number>> = []
+    for(let i = 0; i < op.length; i++) {
+        if(!stats[i]) {
+            stats[i] = 0;
+        }
+        newOptions.push({ 
+            [op[i]]: stats[i] 
+        });
+    }
+    const newData: any = data;
+    newData.options = newOptions;
+    res.status(StatusCodes.OK).json(newData);
 });
 
 export const addVote = asyncHandler(async (req: Request, res: Response) => {
-    //const result = zPollersSchema.safeParse(req.body);
-    // if(!result.success) {
-    //     res.status(StatusCodes.BAD_REQUEST).json({
-    //         error: ReasonPhrases.BAD_REQUEST,
-    //         msg: "Incorrect body"
-    //     })
-    // }
+    const result = z.zodSafeParse(z.zPollersSchema, req.body);
+    if(!result.data) {
+        res.status(StatusCodes.BAD_REQUEST).json({
+            error: ReasonPhrases.BAD_REQUEST,
+            msg: result.error
+        })
+        return;
+    }
 
-    const result = req.body
-    const json = await DB.addVote(result.pollId, result.IPAddress, result.pollOption);
+    const hasVoted = await DB.hasAlreadyVoted(result.data as pollersSchema);
+    if(hasVoted !== null) {
+        res.status(StatusCodes.FORBIDDEN).json({
+            error: ReasonPhrases.FORBIDDEN,
+            msg: "You have already voted!",
+            pollOption: hasVoted.pollOption
+        })
+        return;
+    }
+    const json = await DB.addVote(result.data as pollersSchema);
     res.status(StatusCodes.OK).json(json);
 });

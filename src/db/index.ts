@@ -13,13 +13,9 @@ const createPoll = async (pollData: PollType): Promise<Entity> => {
     return newPoll;
 }
 
-const addVote = async (pollId: string, IPAddress: string, pollOption: number) => {
-    await redisDB.pollersRepository.save({
-        pollId,
-        IPAddress,
-        pollOption
-    });
-    const vote = await redisDB.optionsCountRepository.search().where('pollId').eq(pollId).and('pollOption').eq(pollOption).return.all();
+const addVote = async (data: pollersSchema) => {
+    await redisDB.pollersRepository.save(data);
+    const vote = await redisDB.optionsCountRepository.search().where('pollId').eq(data.pollId).and('pollOption').eq(data.pollOption).return.all();
     let result;
     if(vote.length !== 0) {
         const v = vote[0] as optionsCountSchema;
@@ -27,8 +23,8 @@ const addVote = async (pollId: string, IPAddress: string, pollOption: number) =>
         result = await redisDB.optionsCountRepository.save(v);
     } else {
         result = await redisDB.optionsCountRepository.save({
-            pollId,
-            pollOption,
+            pollId: data.pollId,
+            pollOption: data.pollOption,
             count: 1
         });
     }
@@ -54,11 +50,19 @@ const getPollStats = async(pollId: string) => {
     return result;
 }
 
+const hasAlreadyVoted = async(data: pollersSchema) => {
+    const vote = await redisDB.pollersRepository.search().where('pollId').eq(data.pollId).and('IPAddress').eq(data.IPAddress).return.all();
+    if(vote.length === 0) {
+        return null;
+    }
+    return vote[0];
+}
 
 export default {
     createPoll,
     getPollInfo,
     getPollStats,
-    addVote
+    addVote,
+    hasAlreadyVoted
 }
 

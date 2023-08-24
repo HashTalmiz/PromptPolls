@@ -14,7 +14,7 @@ async function init() {
 
 const pollersSchema = new RedisSchema("Pollers", {
     pollId: { type: "string" },
-    IPAdress: { type: "string" },
+    IPAddress: { type: "string" },
     pollOption : { type: "number" }
 }, {
     dataStructure: 'HASH'
