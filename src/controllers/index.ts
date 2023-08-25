@@ -5,6 +5,7 @@ import * as z from "../utils/zodSchemas";
 import { asyncHandler } from "../utils/errorHandling";
 import requestIp from "request-ip";
 
+
 export const createPoll = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const clientIp = requestIp.getClientIp(req); 
     const result = z.zodSafeParse(z.zPollTypeSchema, req.body)
@@ -29,28 +30,13 @@ export const getPoll = asyncHandler(async (req: Request, res: Response, next: Ne
         })
         return;
     }
-    const data = await DB.getPollInfo(id);
-    if(!data) {
-        return;
-    }
-    const stats = await DB.getPollStats(id);
-    const op = data?.options;
-    const newOptions: Array<Record<string, number>> = []
-    for(let i = 0; i < op.length; i++) {
-        if(!stats[i]) {
-            stats[i] = 0;
-        }
-        newOptions.push({ 
-            [op[i]]: stats[i] 
-        });
-    }
-    const newData: any = data;
-    newData.options = newOptions;
-    res.status(StatusCodes.OK).json(newData);
+    const pollInfoAndStats = await DB.getPollInfo(id);
+    res.status(StatusCodes.OK).json(pollInfoAndStats);
 });
 
 export const addVote = asyncHandler(async (req: Request, res: Response) => {
     const result = z.zodSafeParse(z.zPollersSchema, req.body);
+    const pollsIO = req.app.get("pollsIO");
     if(!result.data) {
         res.status(StatusCodes.BAD_REQUEST).json({
             error: ReasonPhrases.BAD_REQUEST,
@@ -68,6 +54,9 @@ export const addVote = asyncHandler(async (req: Request, res: Response) => {
         })
         return;
     }
-    const json = await DB.addVote(result.data as pollersSchema);
-    res.status(StatusCodes.OK).json(json);
+    
+    const newVote = await DB.addVote(result.data as pollersSchema);
+    const newPollStats = await DB.getPollInfo(result.data.pollId);
+    pollsIO.to(result.data.pollId).emit("pollStatsChange", newPollStats);
+    res.status(StatusCodes.OK).json(newVote);
 });

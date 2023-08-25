@@ -1,6 +1,6 @@
 import express from 'express';
 import * as controller from "../controllers/index";
-import { asyncHandler } from "../utils/errorHandling";
+import { Server as SocketIOServer, Socket } from 'socket.io';
 const router = express.Router();
 
 router.post('/createPoll', controller.createPoll);
@@ -14,5 +14,19 @@ router.get('/test', (req, res) => {
         msg:"HI",
     })
 });
+
+// const createNamespaceRouter = (io: SocketIOServer) => {
+//     const router = express.Router();
+
+//     router.post('/createPoll', controller.createPoll);
+
+//     router.get('/getPoll', controller.getPoll(io));
+
+//     router.post('/addVote', controller.addVote);
+
+//     return router;
+// };
+
+// export default createNamespaceRouter;
 
 export default router

@@ -4,12 +4,16 @@ import { prisma } from "./prisma"
 import redisDB from "./redis"
 
 
-const createPoll = async (pollData: PollType): Promise<Entity> => {
-    const newPoll = await prisma.poll.create({
+const createPoll = async (pollData: PollType) => {
+    const newPoll: PollType = await prisma.poll.create({
         data: {
             ...pollData
         }
     });
+    if(newPoll === null) {
+        //throw error
+        return;
+    }
     return newPoll;
 }
 
@@ -32,23 +36,36 @@ const addVote = async (data: pollersSchema) => {
 }
 
 const getPollInfo = async(pollId: string) => {
-    const result: PollType | null = await prisma.poll.findUnique({
+    const pollInfo: PollType | null = await prisma.poll.findUnique({
         where: {
           id: pollId,
         }
     });
-    return result;
-}
-
-const getPollStats = async(pollId: string) => {
+    if(pollInfo === null) {
+        // throw some custom error
+        return;
+    }
     const options = await redisDB.optionsCountRepository.search().where('pollId').eq(pollId).return.all();
-    const result = {};
+    const accumulatedVotes = {};
     options.forEach((AbstractOption) => {
         const option = AbstractOption as optionsCountSchema;
-        result[option.pollOption] = option.count;
+        accumulatedVotes[option.pollOption] = option.count;
     });
-    return result;
+    const op = pollInfo.options;
+    const newOptions: Array<Record<string, number>> = []
+    for(let i = 0; i < op.length; i++) {
+        if(!accumulatedVotes[i]) {
+            accumulatedVotes[i] = 0;
+        }
+        newOptions.push({ 
+            [op[i]]: accumulatedVotes[i] 
+        });
+    }
+    const newData: any = pollInfo;
+    newData.options = newOptions;
+    return newData as PollStats;
 }
+
 
 const hasAlreadyVoted = async(data: pollersSchema) => {
     const vote = await redisDB.pollersRepository.search().where('pollId').eq(data.pollId).and('IPAddress').eq(data.IPAddress).return.all();
@@ -61,7 +78,6 @@ const hasAlreadyVoted = async(data: pollersSchema) => {
 export default {
     createPoll,
     getPollInfo,
-    getPollStats,
     addVote,
     hasAlreadyVoted
 }

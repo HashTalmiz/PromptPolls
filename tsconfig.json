@@ -12,7 +12,7 @@
     "sourceMap": true,
     "typeRoots": ["./src/types", "./node_modules/@types"],
   },
-  "include": ["src/**/*", "tests"],
+  "include": ["src/**/*", "tests", "tests", "tests"],
   "ts-node": {
     "files": true
   },
