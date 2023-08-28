@@ -15,9 +15,5 @@
   "include": ["src/**/*", "tests", "tests", "tests"],
   "ts-node": {
     "files": true
-  },
-  // "files": [
-  //   "src/index.ts",
-  //   "src/types/types.d.ts"
-  // ],
+  }
 }

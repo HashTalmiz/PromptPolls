@@ -4,9 +4,10 @@ import apiRouter from "./routes/routes";
 import http from 'http';
 import { errorResponse } from './utils/errorHandling';
 import { Server as SocketIOServer, Socket } from 'socket.io';
-
+import cors from "cors";
 
 const app = express();
+app.use(cors());
 const server = http.createServer(app);
 const io: SocketIOServer = new SocketIOServer(server);
 const pollsIO = io.of('/poll')
