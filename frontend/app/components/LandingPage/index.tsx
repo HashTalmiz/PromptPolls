@@ -1,11 +1,8 @@
 "use client"
-import React, { Component, useState, useEffect } from "react";
+import React from "react";
 import Link from 'next/link'
 import { ChevronRightIcon } from '@heroicons/react/20/solid'
 
-const polls = [
-    
-]
 type PollType = {
     id?: string,
     title: string,
@@ -15,18 +12,20 @@ type PollType = {
     createdBy: string
 }
 
-export default class LandingPage extends Component {
+export default class LandingPage extends React.Component<{}, { [key: string]: PollType[]}> {
     constructor(props: {}) {
         super(props);
         this.state = {
             userData: [{
                 id: "jegorjoirwgowjri43r4r",
                 title: "lol1111",
+                createdBy: "lefewf",
                 options: ["p", "q", "r"]
             },
             {
                 id: "435hjr4wherfwi4",
                 title: "idefek",
+                createdBy: "welnkfewlk",
                 options: ["p", "q", "r", "s"]
             }]
           };
@@ -47,7 +46,6 @@ export default class LandingPage extends Component {
     
         return (
             <div className="bg-wework min-h-[90vh] py-16">
-
                 <div className='mx-auto max-w-2xl lg:max-w-7xl sm:py-4 lg:px-8 '>
                     <div className="text-center">
                         <h3 className="text-4xl sm:text-8xl font-bold text-black my-2">Prompt Polls</h3>
@@ -82,8 +80,6 @@ export default class LandingPage extends Component {
                         </div>
                     </div>
                 </section>
-
-
             </div>
 
         );
