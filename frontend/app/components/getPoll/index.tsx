@@ -26,9 +26,10 @@ const pollOptions: PollStats[] = [
 const total: number = 60;
 
 const GetPoll = () => {
+    const [totalVotes, setTotalVotes] = useState(60);
     const [selected, setSelected] = useState();
     return (
-        <div className="w-full px-4 py-16 min-h-[94vh]">
+        <div className="w-full px-4 py-16 min-h-[87vh]">
             <div className="mx-auto w-full max-w-3xl">
                 <div className='py-3 text-center lg:text-start'>
                     <span className='text-blue bg-lightblue text-sm md:text-lg font-bold px-6 py-1 rounded-3xl tracking-wider'>POLL STATS</span>
@@ -48,8 +49,8 @@ const GetPoll = () => {
                                 className={({ checked }) =>
                                     `${checked ? 'bg-opacity-25 text-white ring-2 ring-green ring-offset-2' : 'bg-white'
                                     }
-                      relative flex cursor-pointer rounded-lg px-5 py-4 shadow-md focus:outline-none transition-all border-2
-                      ${selected ? 'cursor-default pointer-events-none' : ''}`
+                                    relative flex cursor-pointer rounded-lg px-5 py-4 shadow-md focus:outline-none transition-all border-2
+                                    ${selected ? 'cursor-default pointer-events-none' : ''}`
                                 }
                                 style={{
                                     background: selected
@@ -67,14 +68,14 @@ const GetPoll = () => {
                                             <div className="text-sm">
                                                 <RadioGroup.Label
                                                     as="p"
-                                                    className={`font-medium text-lg lg:text-3xl ${checked ? 'text-gold' : ''
+                                                    className={`font-medium text-lg lg:text-3xl ${checked ? 'text-orange' : ''
                                                         }`}
                                                 >
                                                     {pollOption.title}
                                                 </RadioGroup.Label>
                                                 <RadioGroup.Description
                                                     as="span"
-                                                    className={`inline italic ${checked ? 'text-gold' : ''
+                                                    className={`inline italic ${checked ? 'text-orange' : ''
                                                         }`}
                                                 >
                                                     <span>
@@ -94,6 +95,9 @@ const GetPoll = () => {
                         ))}
                     </div>
                 </RadioGroup>
+                <div className="text-center my-8 lg:text-xl">
+                    Total Votes: { totalVotes }
+                </div>
             </div>
         </div>
     )

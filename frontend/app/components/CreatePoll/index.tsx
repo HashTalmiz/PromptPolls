@@ -44,14 +44,16 @@ const CreatePoll: React.FC = () => {
             title,
             options
         }
-        const res = await axios.post(BACKEND_URL, pollData);
-        const {data, status} = res;
-        if(status === 200) {
-            toast("Success! Poll created!")
-            router.push(`/poll/${data.id}`)
-        } else {
-            toast.error("Error, could not create poll!")
-            console.log(res)
+        try {
+            const res = await axios.post(BACKEND_URL, pollData);
+            const {data, status} = res;
+            if(status === 200) {
+                toast("Success! Poll created!")
+                router.push(`/poll/${data.id}`)
+            }
+        } catch(e) {
+            toast.error("Error, could not create a poll")
+            console.log(e);
         }
         setIsLoading(false);
     };
@@ -91,7 +93,7 @@ const CreatePoll: React.FC = () => {
                 <div>
                     <div className="mt-16 lg:text-center">
                         {!loading ? (
-                            <button onClick={triggerPollCreation} className='text-sm md:text-2xl font-semibold hover:shadow-xl bg-white text-blue py-3 px-6 md:py-5 md:px-9 rounded-full'>
+                            <button onClick={triggerPollCreation} className='text-sm md:text-2xl font-semibold hover:shadow-xl bg-orange text-white py-3 px-6 md:py-5 md:px-9 rounded-full'>
                                 Create Poll
                             </button>
                             ) : (
