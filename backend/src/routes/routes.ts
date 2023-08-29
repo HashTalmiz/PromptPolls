@@ -17,18 +17,4 @@ router.get('/test', (req, res) => {
     })
 });
 
-// const createNamespaceRouter = (io: SocketIOServer) => {
-//     const router = express.Router();
-
-//     router.post('/createPoll', controller.createPoll);
-
-//     router.get('/getPoll', controller.getPoll(io));
-
-//     router.post('/addVote', controller.addVote);
-
-//     return router;
-// };
-
-// export default createNamespaceRouter;
-
 export default router
