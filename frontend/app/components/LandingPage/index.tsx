@@ -1,6 +1,22 @@
 "use client"
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import Link from 'next/link'
+import { ChevronRightIcon } from '@heroicons/react/20/solid'
+
+const names = [
+    {
+        heading: "Business",
+        price: 29,
+        user: 'per user, per month',
+        button: "Start My 15-day Trial",
+        profiles: '10 Social Profiles',
+        posts: '5 Scheduled Posts Per Profile',
+        templates: "600+ Templated",
+        view: "Calendar View",
+        support: '24/7 VIP Support',
+        category: 'yearly'
+    }
+]
 
 export default class LandingPage extends Component {
 
@@ -21,7 +37,24 @@ export default class LandingPage extends Component {
                         </button>
                         </Link>
                     </div>
-                </div>                
+                </div>
+
+                <section>
+                    <div className='grid grid-cols-1 my-7 justify-items-center gap-14 manage'>
+                        {names.map((items, i) => (
+                            <div className='manageTabs text-center px-[40px] py-10 max-w-sm' key={i}>
+                                <h4 className='text-2xl font-bold mb-5'>Your Past Polls</h4>
+                                <hr style={{ color: "darkgrey", width: "50%", margin: "auto" }} />
+                                <div className="border-2 my-5 flex w-full justify-between rounded-lg px-4 py-2 text-left text- font-medium">
+                                    <p>What is the best car?</p>
+                                    <ChevronRightIcon className="h-7 w-7"/>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+
+
             </div>
 
         );
