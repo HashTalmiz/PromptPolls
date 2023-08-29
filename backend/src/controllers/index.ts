@@ -7,8 +7,9 @@ import requestIp from "request-ip";
 
 
 export const createPoll = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    const clientIp = requestIp.getClientIp(req); 
-    const result = z.zodSafeParse(z.zPollTypeSchema, req.body)
+    const clientIp = requestIp.getClientIp(req);
+    const data = {...req.body, createdBy: clientIp};
+    const result = z.zodSafeParse(z.zPollTypeSchema, data)
     if(result.error) {
         res.status(StatusCodes.BAD_REQUEST).json({
             reason: ReasonPhrases.BAD_REQUEST,
@@ -59,4 +60,10 @@ export const addVote = asyncHandler(async (req: Request, res: Response) => {
     const newPollStats = await DB.getPollInfo(result.data.pollId);
     pollsIO.to(result.data.pollId).emit("pollStatsChange", newPollStats);
     res.status(StatusCodes.OK).json(newVote);
+});
+
+export const getMyPolls = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    const clientIp = requestIp.getClientIp(req); 
+    const allPolls = await DB.getCreatedPolls(clientIp);
+    res.status(200).json(allPolls);
 });

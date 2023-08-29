@@ -4,7 +4,7 @@ type PollType = {
     options: string[],
     createdAt?: Date,
     isLive?: boolean,
-    createdBy?: string
+    createdBy: string
 }
 
 type pollersSchema = {

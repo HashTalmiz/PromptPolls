@@ -9,6 +9,8 @@ router.get('/getPoll', controller.getPoll);
 
 router.post('/addVote', controller.addVote);
 
+router.get('/me', controller.getMyPolls);
+
 router.get('/test', (req, res) => {
     res.status(200).json({
         msg:"HI",

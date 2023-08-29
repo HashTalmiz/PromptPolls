@@ -13,4 +13,5 @@ model Poll {
   title     String   @db.VarChar(255)
   options   String[]
   isLive    Boolean  @default(true)
+  createdBy String   @db.VarChar(255)
 }

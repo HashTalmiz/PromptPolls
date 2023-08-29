@@ -75,10 +75,24 @@ const hasAlreadyVoted = async(data: pollersSchema) => {
     return vote[0];
 }
 
+const getCreatedPolls = async(ip: string) => {
+    const pollInfo: PollType[] | null = await prisma.poll.findMany({
+        where: {
+          createdBy: ip,
+        }
+    });
+    if(pollInfo === null) {
+        // throw some custom error
+        return;
+    }
+    return pollInfo;
+}
+
 export default {
     createPoll,
     getPollInfo,
     addVote,
-    hasAlreadyVoted
+    hasAlreadyVoted,
+    getCreatedPolls
 }
 
