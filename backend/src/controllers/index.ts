@@ -23,7 +23,7 @@ export const createPoll = asyncHandler(async (req: Request, res: Response, next:
 });
 
 export const getPoll = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.body.pollId;
+    const id = req.query.pollId as string;
     if(!id) {
         res.status(StatusCodes.BAD_REQUEST).json({
             error: ReasonPhrases.BAD_REQUEST,

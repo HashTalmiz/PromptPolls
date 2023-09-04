@@ -1,6 +1,5 @@
 import express from 'express';
 import * as controller from "../controllers/index";
-import { Server as SocketIOServer, Socket } from 'socket.io';
 const router = express.Router();
 
 router.post('/createPoll', controller.createPoll);

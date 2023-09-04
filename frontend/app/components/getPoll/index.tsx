@@ -1,8 +1,11 @@
 // import Image from "next/image";
 "use client";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { RadioGroup } from '@headlessui/react';
 import CheckIcon from "../checkIcon/index"
+import axios from "axios";
+import { usePathname, useRouter } from 'next/navigation';
+import io from 'socket.io-client';
 
 type PollStats = {
     title: string;
@@ -25,9 +28,36 @@ const pollOptions: PollStats[] = [
 ];
 const total: number = 60;
 
-const GetPoll = () => {
+const BACKEND_URL = "http://localhost:3000"
+
+const GetPoll: React.FC = () => {
     const [totalVotes, setTotalVotes] = useState(60);
     const [selected, setSelected] = useState();
+    const [pollInfo, setPollInfo] = useState();
+    const router = useRouter();
+    const param = usePathname().slice("/poll/".length);
+
+    useEffect(() => {
+        axios.get(`${BACKEND_URL}/api/getPoll`, { params: { "pollId": `${param}` } })
+          .then((response) => {
+            setPollInfo(response.data);
+          })
+          .catch((error) => {
+            console.error('Error fetching data:', error);
+          });
+    
+        const socket = io(`${BACKEND_URL}/poll`, { port: 3000, query: { "id": param } }); 
+        socket.on('pollStatsChange', (eventData: any) => {
+            console.log(eventData);
+        });
+    
+        return () => {
+          if (socket) 
+            socket.disconnect();
+        };
+      }, [param]);
+
+
     return (
         <div className="w-full px-4 py-16 min-h-[87vh]">
             <div className="mx-auto w-full max-w-3xl">
