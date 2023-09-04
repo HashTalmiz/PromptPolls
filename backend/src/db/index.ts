@@ -35,6 +35,7 @@ const addVote = async (data: pollersSchema) => {
     return result;
 }
 
+
 const getPollInfo = async(pollId: string) => {
     const pollInfo: PollType | null = await prisma.poll.findUnique({
         where: {
@@ -52,13 +53,14 @@ const getPollInfo = async(pollId: string) => {
         accumulatedVotes[option.pollOption] = option.count;
     });
     const op = pollInfo.options;
-    const newOptions: Array<Record<string, number>> = []
+    const newOptions: OptionType[] = []
     for(let i = 0; i < op.length; i++) {
         if(!accumulatedVotes[i]) {
             accumulatedVotes[i] = 0;
         }
-        newOptions.push({ 
-            [op[i]]: accumulatedVotes[i] 
+        newOptions.push({
+            "title": op[i],
+            "count":  accumulatedVotes[i]
         });
     }
     const newData: any = pollInfo;

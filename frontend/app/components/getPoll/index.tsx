@@ -26,29 +26,70 @@ const pollOptions: PollStats[] = [
         count: 30
     }
 ];
-const total: number = 60;
+
+type PollStat = {
+    id?: string,
+    title: string,
+    options: Record<string, number>[],
+    createdAt?: Date,
+    isLive?: boolean,
+    createdBy?: string
+}
+type OptionType = {
+    title: string,
+    count: number
+}
 
 const BACKEND_URL = "http://localhost:3000"
 
 const GetPoll: React.FC = () => {
-    const [totalVotes, setTotalVotes] = useState(60);
-    const [selected, setSelected] = useState();
-    const [pollInfo, setPollInfo] = useState();
+    const [totalVotes, setTotalVotes] = useState(0);
+    const [hasVoted, setHasVoted] = useState<boolean>(false);
+    const [selectedOption, setSelectedOption] = useState<number>(999);
+    const [pollInfo, setPollInfo] = useState<PollStat>({
+        title: 'loading',
+        options: []
+    });
     const router = useRouter();
     const param = usePathname().slice("/poll/".length);
+
+    const optionChosen = async(optionNumber: number) => {
+        const result = await axios.post(`${BACKEND_URL}/api/addVote`, {  
+            "pollId": pollInfo.id,
+            "pollOption": optionNumber
+        })
+        
+
+        if(result.status == 200) {
+            setHasVoted(true);
+            setSelectedOption(optionNumber);
+        }
+        else {
+            // error handle on failure of casting vote
+        }
+    }
+
+    const calculateTotal = (pollInfo: PollStat) => {
+        const newTotal = pollInfo.options.reduce((accumulator, currentObject) => {
+            return accumulator + currentObject.count;
+        }, 0);
+        setTotalVotes(newTotal);
+    }
 
     useEffect(() => {
         axios.get(`${BACKEND_URL}/api/getPoll`, { params: { "pollId": `${param}` } })
           .then((response) => {
-            setPollInfo(response.data);
+            setPollInfo(response.data as PollStat);
+            calculateTotal(response.data)
           })
           .catch((error) => {
             console.error('Error fetching data:', error);
           });
     
         const socket = io(`${BACKEND_URL}/poll`, { port: 3000, query: { "id": param } }); 
-        socket.on('pollStatsChange', (eventData: any) => {
-            console.log(eventData);
+        socket.on('pollStatsChange', (eventData: PollStat) => {
+            setPollInfo(eventData);
+            calculateTotal(eventData)
         });
     
         return () => {
@@ -66,28 +107,28 @@ const GetPoll: React.FC = () => {
                 </div>
                 <div className="mb-5 py-3 text-center lg:text-start">
                     <h1 className='text-3xl lg:text-6xl font-bold text-darkpurple'>
-                        {pollTitle}
+                        {pollInfo?.title}
                     </h1>
                 </div>
-                <RadioGroup value={selected} onChange={setSelected}>
+                <RadioGroup value={selectedOption} onChange={optionChosen}>
                     <RadioGroup.Label className="sr-only">Poll options</RadioGroup.Label>
                     <div className="space-y-4">
-                        {pollOptions.map((pollOption) => (
+                        {pollInfo.options.map((pollOption, idx) => (
                             <RadioGroup.Option
                                 key={pollOption.title}
-                                value={pollOption}
+                                value={idx}
                                 className={({ checked }) =>
                                     `${checked ? 'bg-opacity-25 text-white ring-2 ring-green ring-offset-2' : 'bg-white'
                                     }
                                     relative flex cursor-pointer rounded-lg px-5 py-4 shadow-md focus:outline-none transition-all border-2
-                                    ${selected ? 'cursor-default pointer-events-none' : ''}`
+                                    ${hasVoted ? 'cursor-default pointer-events-none' : ''}`
                                 }
                                 style={{
-                                    background: selected
+                                    background: hasVoted
                                         ? `linear-gradient(to right, #3B82F6 ${(
-                                            (pollOption.count / total) * 100
+                                            (pollOption.count / totalVotes) * 100
                                         ).toFixed(2)}%, transparent ${(
-                                            (pollOption.count / total) * 100
+                                            (pollOption.count / totalVotes) * 100
                                         ).toFixed(2)}%)`
                                         : 'none',
                                 }}
@@ -108,9 +149,11 @@ const GetPoll: React.FC = () => {
                                                     className={`inline italic ${checked ? 'text-orange' : ''
                                                         }`}
                                                 >
-                                                    <span>
-                                                        {pollOption.count} votes
-                                                    </span>
+                                                    {hasVoted && (
+                                                        <span>
+                                                            {pollOption.count} votes
+                                                        </span>
+                                                    )}
                                                 </RadioGroup.Description>
                                             </div>
                                         </div>

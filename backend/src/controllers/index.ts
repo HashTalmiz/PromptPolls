@@ -45,8 +45,10 @@ export const addVote = asyncHandler(async (req: Request, res: Response) => {
         })
         return;
     }
+    const clientIP = requestIp.getClientIp(req);
+    const data = {...result.data, "IPAddress": clientIP}
 
-    const hasVoted = await DB.hasAlreadyVoted(result.data as pollersSchema);
+    const hasVoted = await DB.hasAlreadyVoted(data as pollersSchema);
     if(hasVoted !== null) {
         res.status(StatusCodes.FORBIDDEN).json({
             error: ReasonPhrases.FORBIDDEN,

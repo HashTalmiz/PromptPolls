@@ -27,3 +27,8 @@ type PollStats = {
     isLive?: boolean,
     createdBy?: string
 }
+
+type OptionType = {
+    title: string,
+    count: number
+}
