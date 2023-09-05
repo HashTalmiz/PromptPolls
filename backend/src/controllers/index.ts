@@ -23,6 +23,7 @@ export const createPoll = asyncHandler(async (req: Request, res: Response, next:
 });
 
 export const getPoll = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    const clientIP = requestIp.getClientIp(req);
     const id = req.query.pollId as string;
     if(!id) {
         res.status(StatusCodes.BAD_REQUEST).json({
@@ -32,7 +33,8 @@ export const getPoll = asyncHandler(async (req: Request, res: Response, next: Ne
         return;
     }
     const pollInfoAndStats = await DB.getPollInfo(id);
-    res.status(StatusCodes.OK).json(pollInfoAndStats);
+    const hasVoted = await DB.hasAlreadyVoted({"pollId": id, "IPAddress": clientIP})
+    res.status(StatusCodes.OK).json({...pollInfoAndStats, "hasVoted": hasVoted });
 });
 
 export const addVote = asyncHandler(async (req: Request, res: Response) => {

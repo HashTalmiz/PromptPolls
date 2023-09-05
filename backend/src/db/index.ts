@@ -69,7 +69,7 @@ const getPollInfo = async(pollId: string) => {
 }
 
 
-const hasAlreadyVoted = async(data: pollersSchema) => {
+const hasAlreadyVoted = async(data) => {
     const vote = await redisDB.pollersRepository.search().where('pollId').eq(data.pollId).and('IPAddress').eq(data.IPAddress).return.all();
     if(vote.length === 0) {
         return null;

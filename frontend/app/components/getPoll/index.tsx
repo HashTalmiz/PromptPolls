@@ -34,6 +34,7 @@ type PollStat = {
     createdAt?: Date,
     isLive?: boolean,
     createdBy?: string
+    hasVoted?: object
 }
 type OptionType = {
     title: string,
@@ -41,6 +42,11 @@ type OptionType = {
 }
 
 const BACKEND_URL = "http://localhost:3000"
+
+
+const selectedOption = () => {
+
+}
 
 const GetPoll: React.FC = () => {
     const [totalVotes, setTotalVotes] = useState(0);
@@ -50,7 +56,6 @@ const GetPoll: React.FC = () => {
         title: 'loading',
         options: []
     });
-    const router = useRouter();
     const param = usePathname().slice("/poll/".length);
 
     const optionChosen = async(optionNumber: number) => {
@@ -80,6 +85,10 @@ const GetPoll: React.FC = () => {
         axios.get(`${BACKEND_URL}/api/getPoll`, { params: { "pollId": `${param}` } })
           .then((response) => {
             setPollInfo(response.data as PollStat);
+            if(response.data.hasVoted) {
+                setHasVoted(true);
+                setSelectedOption(response.data.hasVoted.pollOption)
+            }
             calculateTotal(response.data)
           })
           .catch((error) => {
