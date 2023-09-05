@@ -58,9 +58,9 @@ export const addVote = asyncHandler(async (req: Request, res: Response) => {
         return;
     }
     
-    const newVote = await DB.addVote(result.data as pollersSchema);
-    const newPollStats = await DB.getPollInfo(result.data.pollId);
-    pollsIO.to(result.data.pollId).emit("pollStatsChange", newPollStats);
+    const newVote = await DB.addVote(data as pollersSchema);
+    const newPollStats = await DB.getPollInfo(data.pollId);
+    pollsIO.to(data.pollId).emit("pollStatsChange", newPollStats);
     res.status(StatusCodes.OK).json(newVote);
 });
 
