@@ -13,6 +13,11 @@ type pollersSchema = {
     pollOption: number
 }
 
+type votedInfo = {
+    pollId: string,
+    pollOption: number
+}
+
 type optionsCountSchema = {
     pollId: string,
     pollOption: string,

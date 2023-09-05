@@ -27,6 +27,11 @@ const pollOptions: PollStats[] = [
     }
 ];
 
+type votedInfo = {
+    pollId: string,
+    pollOption: number
+}
+
 type PollStat = {
     id?: string,
     title: string,
@@ -34,7 +39,7 @@ type PollStat = {
     createdAt?: Date,
     isLive?: boolean,
     createdBy?: string
-    hasVoted?: object
+    hasVoted?: votedInfo | null
 }
 type OptionType = {
     title: string,
@@ -81,19 +86,24 @@ const GetPoll: React.FC = () => {
         setTotalVotes(newTotal);
     }
 
-    useEffect(() => {
-        axios.get(`${BACKEND_URL}/api/getPoll`, { params: { "pollId": `${param}` } })
-          .then((response) => {
+    const init = async() => {
+        try {
+            const response = await axios.get(`${BACKEND_URL}/api/getPoll`, {
+              params: { pollId: param },
+            });
+          
             setPollInfo(response.data as PollStat);
-            if(response.data.hasVoted) {
-                setHasVoted(true);
-                setSelectedOption(response.data.hasVoted.pollOption)
+          
+            if (response.data.hasVoted) {
+              setHasVoted(true);
+              setSelectedOption(response.data.hasVoted.pollOption);
             }
-            calculateTotal(response.data)
-          })
-          .catch((error) => {
+          
+            calculateTotal(response.data);
+          } catch (error) {
             console.error('Error fetching data:', error);
-          });
+          }
+          
     
         const socket = io(`${BACKEND_URL}/poll`, { port: 3000, query: { "id": param } }); 
         socket.on('pollStatsChange', (eventData: PollStat) => {
@@ -105,6 +115,10 @@ const GetPoll: React.FC = () => {
           if (socket) 
             socket.disconnect();
         };
+    }
+
+    useEffect(() => {
+        init()
       }, [param]);
 
 

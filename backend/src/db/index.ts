@@ -74,7 +74,11 @@ const hasAlreadyVoted = async(data) => {
     if(vote.length === 0) {
         return null;
     }
-    return vote[0];
+    const existingEntry: votedInfo = {
+        pollId: vote[0].pollId as string,
+        pollOption :vote[0].pollOption as number
+    }
+    return existingEntry;
 }
 
 const getCreatedPolls = async(ip: string) => {
