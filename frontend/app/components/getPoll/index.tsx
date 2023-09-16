@@ -128,7 +128,7 @@ const GetPoll: React.FC = () => {
                 <div className='py-3 text-center lg:text-start'>
                     <span className='text-blue bg-lightblue text-sm md:text-lg font-bold px-6 py-1 rounded-3xl tracking-wider'>POLL STATS</span>
                 </div>
-                <div className="mb-5 py-3 text-center lg:text-start">
+                <div className="mb-5 py-3 text-center lg:text-start" style={{overflowWrap: "break-word"}}>
                     <h1 className='text-3xl lg:text-6xl font-bold text-darkpurple'>
                         {pollInfo?.title}
                     </h1>
@@ -154,11 +154,12 @@ const GetPoll: React.FC = () => {
                                             (pollOption.count / totalVotes) * 100
                                         ).toFixed(2)}%)`
                                         : 'none',
+                                    overflowWrap: "break-word"
                                 }}
                             >
                                 {({ checked }) => (
-                                    <div className="flex w-full items-center justify-between">
-                                        <div className="flex items-center">
+                                    <div className="">
+                                        <div className="">
                                             <div className="text-sm">
                                                 <RadioGroup.Label
                                                     as="p"

@@ -26,7 +26,7 @@ export default async function LandingPage() {
   }
   
   return (
-    <div className="bg-wework min-h-[90vh] py-16">
+    <div className="bg-wework min-h-[100vh] py-16">
       <div className="mx-auto max-w-2xl lg:max-w-7xl sm:py-4 lg:px-8 ">
         <div className="text-center">
           <h3 className="text-4xl sm:text-8xl font-bold text-black my-2">Prompt Polls</h3>
