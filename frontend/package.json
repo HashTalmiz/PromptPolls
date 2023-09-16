@@ -22,6 +22,7 @@
     "postcss": "8.4.23",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-scroll-box": "^0.3.5",
     "react-slick": "^0.29.0",
     "react-toastify": "^9.1.3",
     "slick-carousel": "^1.8.1",
