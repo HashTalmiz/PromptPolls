@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --require ts-node/register tests/api.test.ts",
+    "test": "mocha --require ts-node/register tests/api.test.ts --exit",
     "dev": "nodemon --exec ts-node --files src/index.ts"
   },
   "author": "Talmiz Ahmed",
