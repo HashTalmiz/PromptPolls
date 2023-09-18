@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha --require ts-node/register tests/api.test.ts --exit",
-    "dev": "nodemon --exec ts-node --files src/index.ts"
+    "dev": "nodemon --exec ts-node --files src/index.ts",
+    "prod": "tsc && node dist/src/index.js"
   },
   "author": "Talmiz Ahmed",
   "license": "ISC",
