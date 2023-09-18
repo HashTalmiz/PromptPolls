@@ -1,0 +1,62 @@
+version: '3'
+services:
+  redis-stack:
+    image: redis/redis-stack:latest
+    container_name: prompt-poll-redis
+    ports:
+      - "6379:6379"
+      - "8001:8001"
+    restart: always
+    networks:
+      - backend_network
+
+  postgres-dev:
+    image: postgres
+    container_name: prompt-poll-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: mysecretpassword
+    restart: always
+    networks:
+      - backend_network
+
+  backend:
+    build:
+      context: backend
+      target: development
+    volumes:
+      - ./backend:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "3000:3000"
+    expose: 
+      - 3000
+    depends_on:
+      - postgres-dev
+      - redis-stack
+    networks:
+      - backend_network
+      - frontend_network
+
+  frontend:
+    build:
+      context: frontend
+      target: development
+    ports:
+      - 8080:8080
+    stdin_open: true
+    volumes:
+      - ./frontend:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - backend
+    expose: 
+      - 8080
+    networks:
+      - frontend_network
+      - backend_network
+
+networks:
+  backend_network:
+  frontend_network:

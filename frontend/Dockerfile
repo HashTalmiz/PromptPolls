@@ -17,7 +17,7 @@ COPY . /usr/src/app
 EXPOSE 8080
 
 
-CMD ["npm", "start"]
+CMD ["npm", "run", "dev" ]
 
 FROM development as dev-envs
 RUN <<EOF
