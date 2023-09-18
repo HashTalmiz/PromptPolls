@@ -21,15 +21,10 @@ CMD ["npm", "start"]
 
 FROM development as dev-envs
 RUN <<EOF
-apt-get update
-apt-get install -y --no-install-recommends git
-EOF
+RUN apt-get update && apt-get install -y --no-install-recommends git
 
-RUN <<EOF
-useradd -s /bin/bash -m vscode
-groupadd docker
-usermod -aG docker vscode
-EOF
+RUN useradd -s /bin/bash -m vscode && groupadd docker && usermod -aG docker vscode
+
 
 COPY --from=gloursdocker/docker / /
 CMD [ "npm", "run", "dev" ]
