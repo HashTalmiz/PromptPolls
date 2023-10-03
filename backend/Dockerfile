@@ -4,13 +4,15 @@ WORKDIR /usr/src/app
 
 COPY package.json /usr/src/app/package.json
 COPY package-lock.json /usr/src/app/package-lock.json
+COPY prisma /usr/src/app/prisma/
+
 RUN npm ci
 
 COPY . /usr/src/app
 
 EXPOSE 3000
 
-CMD [ "npm", "run", "prod" ]
+CMD [ "npm", "run", "migrate:prod" ]
 
 FROM development as dev-envs
 RUN <<EOF

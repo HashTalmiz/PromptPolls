@@ -1,8 +1,8 @@
 version: '3'
 services:
-  redis-stack:
+  redis-om:
     image: redis/redis-stack:latest
-    container_name: prompt-poll-redis
+    container_name: redis-om
     ports:
       - "6379:6379"
       - "8001:8001"
@@ -10,13 +10,15 @@ services:
     networks:
       - backend_network
 
-  postgres-dev:
+  postgres:
     image: postgres
-    container_name: prompt-poll-postgres
+    container_name: postgres
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_PASSWORD: mysecretpassword
+      - POSTGRES_PASSWORD=mysecretpassword
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=mydb
     restart: always
     networks:
       - backend_network
@@ -33,8 +35,11 @@ services:
     expose: 
       - 3000
     depends_on:
-      - postgres-dev
-      - redis-stack
+      - postgres
+      - redis-om
+    env_file:
+      - ./backend/.env
+
     networks:
       - backend_network
       - frontend_network
