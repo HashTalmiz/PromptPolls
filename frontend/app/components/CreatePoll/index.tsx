@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation'
 const CreatePoll: React.FC = () => {
 
     const router = useRouter();
-    const BACKEND_URL = "http://localhost:3000/api/createPoll";
+    const CREATE_URL = `http://localhost:3000/api/createPoll`;
     const [title, setTitle] = useState<string>('');
     const [options, setOptions] = useState<string[]>(['']);
     const [loading, setIsLoading] = useState<boolean>(false);
@@ -45,7 +45,7 @@ const CreatePoll: React.FC = () => {
             options
         }
         try {
-            const res = await axios.post(BACKEND_URL, pollData);
+            const res = await axios.post(CREATE_URL, pollData);
             const {data, status} = res;
             if(status === 200) {
                 toast("Success! Poll created!")

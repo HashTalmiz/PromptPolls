@@ -11,21 +11,6 @@ type PollStats = {
     title: string;
     count: number;
 };
-const pollTitle: string = "Which is the best car?"
-const pollOptions: PollStats[] = [
-    {
-        title: "Object 1",
-        count: 10
-    },
-    {
-        title: "Object 2",
-        count: 20
-    },
-    {
-        title: "Object 3",
-        count: 30
-    }
-];
 
 type votedInfo = {
     pollId: string,
@@ -48,11 +33,6 @@ type OptionType = {
 
 const BACKEND_URL = "http://localhost:3000"
 
-
-const selectedOption = () => {
-
-}
-
 const GetPoll: React.FC = () => {
     const [totalVotes, setTotalVotes] = useState(0);
     const [hasVoted, setHasVoted] = useState<boolean>(false);
@@ -69,7 +49,6 @@ const GetPoll: React.FC = () => {
             "pollOption": optionNumber
         })
         
-
         if(result.status == 200) {
             setHasVoted(true);
             setSelectedOption(optionNumber);
