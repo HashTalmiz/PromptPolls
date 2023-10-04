@@ -6,13 +6,15 @@ COPY package.json /usr/src/app/package.json
 COPY package-lock.json /usr/src/app/package-lock.json
 COPY prisma /usr/src/app/prisma/
 
+RUN apt-get update -y && apt-get install -y openssl
+
 RUN npm ci
 
 COPY . /usr/src/app
 
 EXPOSE 3000
 
-CMD [ "npm", "run", "migrate:prod" ]
+CMD [ "npm", "run", "push:prod" ]
 
 FROM development as dev-envs
 RUN <<EOF

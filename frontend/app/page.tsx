@@ -10,7 +10,7 @@ interface PollType {
 }
 
 const fetchPolls = async () => {
-  const response = await fetch('http://localhost:3000/api/me');
+  const response = await fetch(`${process.env.BACKEND_URL}/api/me`);
   const data = await response.json();
   return data;
 };
@@ -22,6 +22,7 @@ export default async function LandingPage() {
   try{
     userData = await fetchPolls();
   } catch(e) {
+    console.log(e);
     emptyMsg = "Had trouble fetching your past polls :("
   }
   
