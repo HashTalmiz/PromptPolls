@@ -18,7 +18,7 @@ services:
     environment:
       - POSTGRES_PASSWORD=mysecretpassword
       - POSTGRES_USER=postgres
-      - POSTGRES_DB=Poll
+      - POSTGRES_DB=Polls
     restart: always
     networks:
       - backend_network
