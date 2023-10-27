@@ -1,14 +1,13 @@
 
 # Prompt Polls
 
-A web service that allows you to create and vote in polls anonymously without signing up.
+A web service that allows you to create Polls and vote in them anonymously without signing up, and does not allow duplicate voting.
 
 ![Landing Page](./public/LandingPage.png)
-
+___
 ![Poll Page](./public/CreatePoll.png)
-
+___
 ![Poll Page](./public/PollPostVote.png)
-
 
 
 ## Tech Stack
