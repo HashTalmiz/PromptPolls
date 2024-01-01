@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { RadioGroup } from '@headlessui/react';
 import CheckIcon from "../checkIcon/index"
 import axios from "axios";
-import { usePathname, useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import io from 'socket.io-client';
 
 type PollStats = {
@@ -41,8 +41,8 @@ const GetPoll: React.FC = () => {
         title: 'loading',
         options: []
     });
-    const param = usePathname().slice("/poll/".length);
-
+    const searchParams = useSearchParams()
+    const id = searchParams.get('id')
     const optionChosen = async(optionNumber: number) => {
         const result = await axios.post(`${BACKEND_URL}/api/addVote`, {  
             "pollId": pollInfo.id,
@@ -68,7 +68,7 @@ const GetPoll: React.FC = () => {
     const init = async() => {
         try {
             const response = await axios.get(`${BACKEND_URL}/api/getPoll`, {
-              params: { pollId: param },
+              params: { pollId: id },
             });
           
             setPollInfo(response.data as PollStat);
@@ -84,7 +84,7 @@ const GetPoll: React.FC = () => {
           }
           
     
-        const socket = io(`${BACKEND_URL}/poll`, { port: 3000, query: { "id": param } }); 
+        const socket = io(`${BACKEND_URL}/poll`, { port: 3000, query: { "id": id } });
         socket.on('pollStatsChange', (eventData: PollStat) => {
             setPollInfo(eventData);
             calculateTotal(eventData)
@@ -98,7 +98,7 @@ const GetPoll: React.FC = () => {
 
     useEffect(() => {
         init()
-      }, [param]);
+      }, [id]);
 
 
     return (
