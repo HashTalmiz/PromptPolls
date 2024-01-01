@@ -18,13 +18,3 @@ EXPOSE 8080
 
 
 CMD ["npm", "run", "dev" ]
-
-FROM development as dev-envs
-RUN <<EOF
-RUN apt-get update && apt-get install -y --no-install-recommends git
-
-RUN useradd -s /bin/bash -m vscode && groupadd docker && usermod -aG docker vscode
-
-
-COPY --from=gloursdocker/docker / /
-CMD [ "npm", "run", "dev" ]

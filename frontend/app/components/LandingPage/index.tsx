@@ -73,9 +73,9 @@ export default class LandingPage extends React.Component<{}, { [key: string]: Po
                                         <ChevronRightIcon className="h-7 w-7" />
                                     </div>
                                 </Link>
-                            )):(
-                                    <div className="mt-5">You haven't created any polls!</div>    
-                                )
+                            )): (
+                                <div className="mt-5">You haven&apos;t created any polls!</div>
+                            )
                             }
                         </div>
                     </div>

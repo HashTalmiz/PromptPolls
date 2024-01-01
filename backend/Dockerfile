@@ -1,3 +1,4 @@
+# Base Development Stage
 FROM node:lts-buster-slim AS development
 
 WORKDIR /usr/src/app
@@ -15,15 +16,3 @@ COPY . /usr/src/app
 EXPOSE 3000
 
 CMD [ "npm", "run", "push:prod" ]
-
-FROM development as dev-envs
-RUN <<EOF
-RUN apt-get update && apt-get install -y --no-install-recommends git
-
-
-RUN <<EOF
-RUN useradd -s /bin/bash -m vscode && groupadd docker && usermod -aG docker vscode
-
-
-COPY --from=gloursdocker/docker / /
-CMD [ "npm", "run", "dev" ]
