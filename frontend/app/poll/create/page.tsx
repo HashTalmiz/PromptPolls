@@ -1,7 +1,6 @@
 "use client"
 import React, { useState } from 'react';
-import dynamic from 'next/dynamic'
-const CreatePollComponent = dynamic(() => import('../../components/createPoll'), { ssr: false })
+import CreatePollComponent from '../../components/createPoll';
 const CreatePoll: React.FC = () => {
     return (
         <CreatePollComponent/>
