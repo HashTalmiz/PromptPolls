@@ -49,7 +49,7 @@ const CreatePoll: React.FC = () => {
             const {data, status} = res;
             if(status === 200) {
                 toast("Success! Poll created!")
-                router.push(`/poll/${data.id}`)
+                router.push(`/poll?id=${data.id}`)
             }
         } catch(e) {
             toast.error("Error, could not create a poll")
