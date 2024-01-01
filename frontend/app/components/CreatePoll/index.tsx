@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation'
 const CreatePoll: React.FC = () => {
 
     const router = useRouter();
-    const CREATE_URL = `http://localhost:3000/api/createPoll`;
+    const CREATE_URL = `${process.env.BACKEND_URL}/api/createPoll`;
     const [title, setTitle] = useState<string>('');
     const [options, setOptions] = useState<string[]>(['']);
     const [loading, setIsLoading] = useState<boolean>(false);
